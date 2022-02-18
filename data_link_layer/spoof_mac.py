@@ -1,4 +1,3 @@
-import sys                                                                                                         
 import os
 
 def generate_ICMP():
@@ -10,12 +9,10 @@ def generate_ICMP():
             raise RuntimeError("Error: failed to ping defender")
         else:
             print(
-    """
-    Got ICMP-reply to ICMP-echo - 1
-    Got ICMP-reply to ICMP-echo - 2
-    Got ICMP-reply to ICMP-echo - 3
-    Got ICMP-reply to ICMP-echo - 4
-    """
+"""Got ICMP-reply to ICMP-echo - 1
+Got ICMP-reply to ICMP-echo - 2
+Got ICMP-reply to ICMP-echo - 3
+Got ICMP-reply to ICMP-echo - 4"""
                     )
     except Exception as e:
         print("Error: failed to ping defender")
