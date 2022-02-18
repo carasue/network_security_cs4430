@@ -30,9 +30,9 @@ if __name__ == '__main__':
     os.system("sudo ip link set {} master {}".format("eth0", bridge_name))
     os.system("sudo ip link set {} master {}".format(interface_1, bridge_name))
     os.system("sudo ip link set {} master {}".format(interface_2, bridge_name))
-# 5. set the new bridge's id with argument
+# 6. set the new bridge's id with argument
     os.system("sudo ip link set dev {} address {}".format(bridge_name, bridge_id))
-# 6. set the new bridge's priority as low as possible
+# 7. set the new bridge's priority as low as possible
     os.system("sudo brctl setbridgeprio {} {}".format(bridge_name, bridge_priority))
 
 
