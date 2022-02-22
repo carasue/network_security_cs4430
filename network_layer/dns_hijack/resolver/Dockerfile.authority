@@ -1,0 +1,6 @@
+FROM ubuntu:20.04
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y dnsmasq python3
+
+COPY entrypoint.authority.sh /entrypoint.sh
+COPY udp_proxy.py /opt/proxy.py
+RUN chmod +x /entrypoint.sh /opt/proxy.py

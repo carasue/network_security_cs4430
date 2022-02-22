@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+  attacker:
+    container_name: attacker
+    hostname: attacker
+    build: .
+    command: tail -F anything
+    environment:
+      - PYTHONUNBUFFERED=1
+    cap_add:
+      - ALL
+    volumes:
+      - .:/data
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.10
+  victim:
+    container_name: victim
+    hostname: victim
+    cap_add:
+      - ALL
+    volumes:
+      - .:/data
+    build:
+      context: victim
+    command: bash -c "iptables-restore < /etc/iptables/rules.v4 && tail -F anything"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.20
+
+networks:
+  home_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-icmpcov
+    ipam:
+      config:
+        - subnet: 192.168.124.0/24

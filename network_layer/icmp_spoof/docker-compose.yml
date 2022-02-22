@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  attacker:
+    container_name: attacker
+    hostname: attacker
+    build: .
+    command: tail -F anything
+    cap_add:
+      - ALL
+    network_mode: host
+    volumes:
+      - .:/data
+  client:
+    container_name: client
+    hostname: client
+    cap_add:
+      - ALL
+    build: .
+    command: tail -F anything
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.10
+  server:
+    container_name: server
+    hostname: server
+    cap_add:
+      - ALL
+    build:
+      context: server
+    command: /entrypoint.sh
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.20
+
+networks:
+  home_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-icmpspoof
+    ipam:
+      config:
+        - subnet: 192.168.124.0/24

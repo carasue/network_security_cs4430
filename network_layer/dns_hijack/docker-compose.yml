@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  attacker:
+    container_name: attacker
+    hostname: attacker
+    build: 
+      context: .
+    command: tail -F anything
+    environment:
+      - PYTHONUNBUFFERED=1
+    cap_add:
+      - ALL
+    volumes:
+      - .:/data
+    network_mode: host
+  resolver:
+    container_name: resolver
+    hostname: resolver
+    build: 
+      context: resolver
+      dockerfile: Dockerfile.resolver
+    command: /entrypoint.sh
+    environment:
+      - PYTHONUNBUFFERED=1
+    dns:
+      - 192.168.124.11
+    cap_add:
+      - ALL
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.10
+  authority:
+    container_name: authority
+    hostname: authority
+    build: 
+      context: resolver
+      dockerfile: Dockerfile.authority
+    command: /entrypoint.sh
+    environment:
+      - PYTHONUNBUFFERED=1
+    cap_add:
+      - ALL
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.11
+  victim:
+    container_name: victim
+    hostname: victim
+    build: 
+      context: victim
+    command: /opt/application.py
+    environment:
+      - PYTHONUNBUFFERED=1
+    dns:
+      - 192.168.124.10
+    networks:
+      home_net:
+        ipv4_address: 192.168.124.20
+
+networks:
+  home_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-dns
+    ipam:
+      config:
+        - subnet: 192.168.124.0/24
