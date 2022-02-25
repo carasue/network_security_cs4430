@@ -15,5 +15,3 @@ if __name__ == '__main__':
     pkg = IP(dst=dst_ip)/ICMP(type=15)/payload
     send(pkg)
     exit(0)
-
-~                 
